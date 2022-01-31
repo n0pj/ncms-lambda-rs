@@ -1,0 +1,50 @@
+{
+  "version": "2.0",
+  "routeKey": "GET /ncms-rs-dev-lambda_rs",
+  "rawPath": "/default/ncms-rs-dev-lambda_rs",
+  "rawQueryString": "query=query%20{%20humans(i:%200)%20{%20name%20}%20}",
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "ja,en-US;q=0.9,en;q=0.8",
+    "content-length": "0",
+    "host": "9od9gva0x8.execute-api.ap-northeast-1.amazonaws.com",
+    "pragma": "akamai-x-ro-trace",
+    "sec-ch-ua": "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "none",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+    "x-akamai-a2-disable": "on",
+    "x-akamai-ro-piez": "on",
+    "x-amzn-trace-id": "Root=1-61c0dab4-594bbbe42f5b35154448d7a2",
+    "x-forwarded-for": "14.132.221.166",
+    "x-forwarded-port": "443",
+    "x-forwarded-proto": "https",
+    "x-im-piez": "on"
+  },
+  "queryStringParameters": { "query": "query { humans(i: 0) { name } }" },
+  "requestContext": {
+    "accountId": "904283442607",
+    "apiId": "9od9gva0x8",
+    "domainName": "9od9gva0x8.execute-api.ap-northeast-1.amazonaws.com",
+    "domainPrefix": "9od9gva0x8",
+    "http": {
+      "method": "GET",
+      "path": "/default/ncms-rs-dev-lambda_rs",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "14.132.221.166",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+    },
+    "requestId": "KqccRj7uNjMEMnw=",
+    "routeKey": "GET /ncms-rs-dev-lambda_rs",
+    "stage": "default",
+    "time": "20/Dec/2021:19:34:12 +0000",
+    "timeEpoch": 1640028852788
+  },
+  "isBase64Encoded": false
+}

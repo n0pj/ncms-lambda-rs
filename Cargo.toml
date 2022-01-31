@@ -1,0 +1,30 @@
+[package]
+edition = "2018"
+name = "ncms-lambda"
+version = "0.1.0"
+
+[dependencies]
+aws-config = "0.4.1"
+aws-sdk-s3 = "0.4.1"
+chrono = "0.4"
+diesel = {version = "1.4.8", features = ["mysql"]}
+dotenv = "0.15"
+juniper = "0.15.7"
+# lambda = {git = "https://github.com/awslabs/aws-lambda-rust-runtime/", branch = "master"}
+actix-cors = "0.5"
+actix-web = "3"
+lambda_runtime = "0.4.1"
+ncms_core = {git = "https://github.com/n0pj/ncms-core-rs", branch = "main"}
+ncms_lambda_core = {git = "https://github.com/n0pj/ncms-lambda-core-rs", branch = "main"}
+regex = "1"
+rusoto_core = "0.47.0"
+rusoto_s3 = "0.47.0"
+serde = "1.0"
+serde_json = "1.0"
+tokio = {version = "1.15", features = ["full"]}
+
+[target.x86_64-unknown-linux-musl]
+rustflags = ["-C", "link-args= -static"]
+
+[patch.crates-io]
+mysqlclient-sys = {git = "https://github.com/pzmarzly/mysqlclient-sys", rev = "acd1b2b"}
