@@ -286,7 +286,7 @@ async fn run_actix_web_server() -> Result<(), Error> {
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
             .service(web::resource("/").route(web::post().to(graphql)))
     })
-    .bind("rust:8888")?
+    .bind("ndock_rust:8888")?
     .run()
     .await?;
 
