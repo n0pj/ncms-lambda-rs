@@ -1,6 +1,4 @@
 mod category;
-mod login;
-mod logout;
 mod post;
 mod post_comment;
 
@@ -36,34 +34,6 @@ impl QueryRoot {
     }
 
     // fn users() -> FieldResult<Vec<Human>> {
-    //     Ok(vec![Human {
-    //         uuid: "1".to_string(),
-    //         name: "category1".to_string(),
-    //     }])
-    // }
-
-    // fn login() -> FieldResult<Vec<Human>> {
-    //     Ok(vec![Human {
-    //         uuid: "1".to_string(),
-    //         name: "category1".to_string(),
-    //     }])
-    // }
-
-    // fn logout() -> FieldResult<Vec<Human>> {
-    //     Ok(vec![Human {
-    //         uuid: "1".to_string(),
-    //         name: "category1".to_string(),
-    //     }])
-    // }
-
-    // fn create_mfa_secret() -> FieldResult<Vec<Human>> {
-    //     Ok(vec![Human {
-    //         uuid: "1".to_string(),
-    //         name: "category1".to_string(),
-    //     }])
-    // }
-
-    // fn confirm_mfa_secret() -> FieldResult<Vec<Human>> {
     //     Ok(vec![Human {
     //         uuid: "1".to_string(),
     //         name: "category1".to_string(),
