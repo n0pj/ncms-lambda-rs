@@ -2,7 +2,7 @@ use crate::schema::post;
 use chrono::Utc;
 use diesel::{Insertable, Queryable};
 use juniper::GraphQLObject;
-use ncms_core::{Model, NewModel};
+pub use ncms_core::{Model, NewModel};
 use std::io::Error;
 use uuid::Uuid;
 
@@ -12,10 +12,10 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Queryable)]
 pub struct Post {
     pub uuid: String,
-    pub title: String,
-    pub password: String,
+    pub title: Option<String>,
+    pub password: Option<String>,
     pub content: String,
-    pub slug: String,
+    pub slug: Option<String>,
     pub created_at: String,
     pub updated_at: String,
     pub status_uuid: String,
@@ -48,10 +48,10 @@ impl Model<ResPost, Error> for Post {
 #[table_name = "post"]
 pub struct NewPost {
     pub uuid: String,
-    pub title: String,
-    pub password: String,
+    pub title: Option<String>,
+    pub password: Option<String>,
     pub content: String,
-    pub slug: String,
+    pub slug: Option<String>,
     pub created_at: String,
     pub updated_at: String,
     pub status_uuid: String,
@@ -66,10 +66,10 @@ impl Default for NewPost {
             uuid: Uuid::new_v4().to_string(),
             status_uuid: "".to_owned(),
             user_uuid: "".to_owned(),
-            title: "".to_owned(),
-            password: "".to_owned(),
+            title: None,
+            password: None,
             content: "".to_owned(),
-            slug: "".to_owned(),
+            slug: None,
             created_at: now.clone(),
             updated_at: now,
         }
@@ -140,10 +140,10 @@ impl NewModel<Post, NewPost, Error> for NewPost {
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct ResPost {
     pub uuid: String,
-    pub title: String,
-    pub password: String,
+    pub title: Option<String>,
+    pub password: Option<String>,
     pub content: String,
-    pub slug: String,
+    pub slug: Option<String>,
     pub created_at: String,
     pub updated_at: String,
     pub status_uuid: String,
