@@ -16,9 +16,9 @@ mod subscription_roots;
 
 // use juniper::http::graphiql::graphiql_source;
 // use aws_config::meta::region::RegionProviderChain;
-use crate::models::category::Category;
+// use crate::models::category::Category;
 use chrono::Utc;
-use diesel::prelude::*;
+// use diesel::prelude::*;
 use dotenv::dotenv;
 use http::response::NcmsValueErrors;
 use juniper::execute_sync;
@@ -37,7 +37,7 @@ use serde::Deserialize;
 use serde_json::Value;
 use std::env;
 
-use ncms_core::db::mysql::establish_connection;
+// use ncms_core::db::mysql::establish_connection;
 use ncms_lambda_core::mysql::Migration;
 
 use actix_cors::Cors;
@@ -122,30 +122,20 @@ async fn local_handler(event: Value) -> Result<Value, Value> {
     let query = get_query(event)?;
     let result = execute_query(query).await?;
 
-    let _conn = establish_connection();
+    // let conn = establish_connection();
 
     println!("database connected");
 
-    // #[derive(Debug, diesel::Queryable)]
-    // struct Category {
-    //     uuid: String,
-    //     name: String,
-    //     slug: String,
-    //     created_at: String,
-    //     updated_at: String,
-    // }
-
     // use schema::category::dsl::category as dsl_category;
 
-    // let result2 = dsl_category.limit(5).load::<Category>(&conn).expect("err");
-
+    // let category = dsl_category.limit(5).load::<Category>(&conn).expect("err");
     // println!(
     //     "{} {} {} {} {}",
-    //     result2[0].uuid,
-    //     result2[0].name,
-    //     result2[0].slug,
-    //     result2[0].created_at,
-    //     result2[0].updated_at
+    //     category[0].uuid,
+    //     category[0].name,
+    //     category[0].slug,
+    //     category[0].created_at,
+    //     category[0].updated_at
     // );
 
     Ok(result)
@@ -158,22 +148,21 @@ async fn handler(event: Value, _: Context) -> Result<Value, Error> {
         Err(result) => return Ok(result),
     };
     let result = execute_query(query).await;
+    // let conn = establish_connection();
 
-    let conn = establish_connection();
+    // println!("database connected");
 
-    println!("database connected");
+    // use schema::category::dsl::category as dsl_category;
 
-    use schema::category::dsl::category as dsl_category;
-
-    let result2 = dsl_category.limit(5).load::<Category>(&conn).expect("err");
-    println!(
-        "{} {} {} {} {}",
-        result2[0].uuid,
-        result2[0].name,
-        result2[0].slug,
-        result2[0].created_at,
-        result2[0].updated_at
-    );
+    // let category = dsl_category.limit(5).load::<Category>(&conn).expect("err");
+    // println!(
+    //     "{} {} {} {} {}",
+    //     category[0].uuid,
+    //     category[0].name,
+    //     category[0].slug,
+    //     category[0].created_at,
+    //     category[0].updated_at
+    // );
 
     // Ok(result.unwrap())
     match result {
