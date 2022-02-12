@@ -126,17 +126,17 @@ struct ResPostComment {
 pub type PostComments = Vec<PostComment>;
 pub type ResPostComments = Vec<ResPostComment>;
 
-pub trait CategoriesMethods {
+pub trait PostCommentsMethods {
     ///
     /// レスポンス用に変換
     ///
     fn to_res(&self) -> ResPostComments;
 }
 
-impl CategoriesMethods for PostComments {
+impl PostCommentsMethods for PostComments {
     fn to_res(&self) -> ResPostComments {
-        self.iter()
-            .map(|post_comment| post_comment.to_res().unwrap())
-            .collect::<ResPostComments>()
+        self.into_iter()
+            .map(|post| post.to_res().unwrap())
+            .collect()
     }
 }

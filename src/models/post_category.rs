@@ -115,19 +115,19 @@ struct ResPostCategory {
 }
 
 pub type PostCategories = Vec<PostCategory>;
-pub type ResCategories = Vec<ResPostCategory>;
+pub type ResPostCategories = Vec<ResPostCategory>;
 
-pub trait CategoriesMethods {
+pub trait PostCategoriesMethods {
     ///
     /// レスポンス用に変換
     ///
-    fn to_res(&self) -> ResCategories;
+    fn to_res(&self) -> ResPostCategories;
 }
 
-impl CategoriesMethods for PostCategories {
-    fn to_res(&self) -> ResCategories {
-        self.iter()
-            .map(|post_category| post_category.to_res().unwrap())
-            .collect::<ResCategories>()
+impl PostCategoriesMethods for PostCategories {
+    fn to_res(&self) -> ResPostCategories {
+        self.into_iter()
+            .map(|post| post.to_res().unwrap())
+            .collect()
     }
 }

@@ -135,8 +135,8 @@ pub trait CategoriesMethods {
 
 impl CategoriesMethods for Categories {
     fn to_res(&self) -> ResCategories {
-        self.iter()
-            .map(|category| category.to_res().unwrap())
-            .collect::<ResCategories>()
+        self.into_iter()
+            .map(|post| post.to_res().unwrap())
+            .collect()
     }
 }
