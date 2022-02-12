@@ -40,7 +40,7 @@ impl Model<ResCategory, Error> for Category {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "category"]
-struct NewCategory {
+pub struct NewCategory {
     pub uuid: String,
     pub name: String,
     pub slug: String,
@@ -114,7 +114,7 @@ impl NewModel<Category, NewCategory, Error> for NewCategory {
 /// GraphQL のレスポンス用に変換
 ///
 #[derive(Debug, Clone, GraphQLObject)]
-struct ResCategory {
+pub struct ResCategory {
     pub uuid: String,
     pub name: String,
     pub slug: String,

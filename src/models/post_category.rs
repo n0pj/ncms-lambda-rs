@@ -38,7 +38,7 @@ impl Model<ResPostCategory, Error> for PostCategory {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "post_category"]
-struct NewPostCategory {
+pub struct NewPostCategory {
     pub uuid: String,
     pub post_uuid: String,
     pub category_uuid: String,
@@ -106,7 +106,7 @@ impl NewModel<PostCategory, NewPostCategory, Error> for NewPostCategory {
 /// GraphQL のレスポンス用に変換
 ///
 #[derive(Debug, Clone, GraphQLObject)]
-struct ResPostCategory {
+pub struct ResPostCategory {
     pub uuid: String,
     pub post_uuid: String,
     pub category_uuid: String,

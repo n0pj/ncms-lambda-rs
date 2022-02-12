@@ -1,7 +1,11 @@
+mod status;
+
 ///
 /// 主に開発環境でのテストデータ挿入で使用
 ///
-pub fn insert_testdatas() {}
+pub fn insert_testdatas() {
+    status::insert_statuses();
+}
 
 ///
 /// 主にステージング環境でのテストデータ挿入で使用

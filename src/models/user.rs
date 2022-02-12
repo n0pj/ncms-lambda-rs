@@ -42,7 +42,7 @@ impl Model<ResUser, Error> for User {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "user"]
-struct NewUser {
+pub struct NewUser {
     pub uuid: String,
     pub name: Option<String>,
     pub email: Option<String>,
@@ -122,7 +122,7 @@ impl NewModel<User, NewUser, Error> for NewUser {
 /// GraphQL のレスポンス用に変換
 ///
 #[derive(Debug, Clone, GraphQLObject)]
-struct ResUser {
+pub struct ResUser {
     pub uuid: String,
     pub name: Option<String>,
     pub email: Option<String>,

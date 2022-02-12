@@ -36,7 +36,7 @@ impl Model<ResStatus, Error> for Status {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "status"]
-struct NewStatus {
+pub struct NewStatus {
     pub uuid: String,
     pub name: String,
     pub created_at: String,
@@ -98,7 +98,7 @@ impl NewModel<Status, NewStatus, Error> for NewStatus {
 /// GraphQL のレスポンス用に変換
 ///
 #[derive(Debug, Clone, GraphQLObject)]
-struct ResStatus {
+pub struct ResStatus {
     pub uuid: String,
     pub name: String,
     pub created_at: String,

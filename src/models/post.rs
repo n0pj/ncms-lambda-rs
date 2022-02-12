@@ -46,7 +46,7 @@ impl Model<ResPost, Error> for Post {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "post"]
-struct NewPost {
+pub struct NewPost {
     pub uuid: String,
     pub title: String,
     pub password: String,
@@ -138,7 +138,7 @@ impl NewModel<Post, NewPost, Error> for NewPost {
 /// GraphQL のレスポンス用に変換
 ///
 #[derive(Debug, Clone, GraphQLObject)]
-struct ResPost {
+pub struct ResPost {
     pub uuid: String,
     pub title: String,
     pub password: String,

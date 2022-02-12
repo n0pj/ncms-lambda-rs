@@ -40,7 +40,7 @@ impl Model<ResPostComment, Error> for PostComment {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "post_comment"]
-struct NewPostComment {
+pub struct NewPostComment {
     pub uuid: String,
     pub content: String,
     pub created_at: String,
@@ -114,7 +114,7 @@ impl NewModel<PostComment, NewPostComment, Error> for NewPostComment {
 /// GraphQL のレスポンス用に変換
 ///
 #[derive(Debug, Clone, GraphQLObject)]
-struct ResPostComment {
+pub struct ResPostComment {
     pub uuid: String,
     pub post_uuid: String,
     pub user_uuid: String,

@@ -5,6 +5,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate diesel;
 
+mod constants;
 mod errors;
 mod http;
 mod models;
