@@ -2,7 +2,7 @@ use crate::schema::session;
 use chrono::Utc;
 use diesel::{Insertable, Queryable};
 use juniper::GraphQLObject;
-use ncms_core::{Model, NewModel};
+pub use ncms_core::{Model, NewModel};
 use std::io::Error;
 use uuid::Uuid;
 
