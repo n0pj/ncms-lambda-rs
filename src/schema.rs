@@ -45,6 +45,17 @@ table! {
 }
 
 table! {
+    session (uuid) {
+        uuid -> Varchar,
+        bearer_token -> Varchar,
+        expired_at -> Varchar,
+        created_at -> Varchar,
+        updated_at -> Varchar,
+        user_uuid -> Varchar,
+    }
+}
+
+table! {
     status (uuid) {
         uuid -> Varchar,
         name -> Varchar,
@@ -71,12 +82,14 @@ joinable!(post_category -> category (category_uuid));
 joinable!(post_category -> post (post_uuid));
 joinable!(post_comment -> post (post_uuid));
 joinable!(post_comment -> user (user_uuid));
+joinable!(session -> user (user_uuid));
 
 allow_tables_to_appear_in_same_query!(
     category,
     post,
     post_category,
     post_comment,
+    session,
     status,
     user,
 );
