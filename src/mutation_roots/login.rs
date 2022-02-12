@@ -12,5 +12,5 @@ pub fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResUser> {
     let new_login = NewLogin::new(&arg_verify_login.email, &arg_verify_login.password);
     let user = new_login.verify_login()?;
 
-    user.to_res()
+    Ok(user.to_res()?)
 }

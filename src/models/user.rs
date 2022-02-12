@@ -1,7 +1,7 @@
 use crate::schema::user;
 use chrono::Utc;
 use diesel::{Insertable, Queryable};
-use juniper::{FieldError, GraphQLObject};
+use juniper::GraphQLObject;
 pub use ncms_core::{Model, NewModel};
 use std::io::Error;
 use uuid::Uuid;
@@ -21,11 +21,11 @@ pub struct User {
     pub updated_at: String,
 }
 
-impl Model<ResUser, FieldError> for User {
+impl Model<ResUser, Error> for User {
     ///
     /// レスポンス用に変換
     ///
-    fn to_res(&self) -> Result<ResUser, FieldError> {
+    fn to_res(&self) -> Result<ResUser, Error> {
         Ok(ResUser {
             uuid: self.uuid.clone(),
             name: self.name.clone(),
