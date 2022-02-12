@@ -3,7 +3,7 @@ table! {
         uuid -> Varchar,
         name -> Varchar,
         slug -> Varchar,
-        is_main -> Nullable<Tinyint>,
+        is_main -> Bool,
         created_at -> Varchar,
         updated_at -> Varchar,
     }

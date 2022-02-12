@@ -1,12 +1,6 @@
 pub mod category;
-pub mod kind;
 pub mod post;
 pub mod post_category;
 pub mod post_comment;
-pub mod post_kind;
-pub mod post_score;
-pub mod post_score_kind;
-pub mod post_status;
-pub mod post_user;
 pub mod status;
 pub mod user;

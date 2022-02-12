@@ -16,6 +16,7 @@ mod subscription_roots;
 
 // use juniper::http::graphiql::graphiql_source;
 // use aws_config::meta::region::RegionProviderChain;
+use crate::models::category::Category;
 use chrono::Utc;
 use diesel::prelude::*;
 use dotenv::dotenv;
@@ -161,15 +162,6 @@ async fn handler(event: Value, _: Context) -> Result<Value, Error> {
     let conn = establish_connection();
 
     println!("database connected");
-
-    #[derive(Debug, diesel::Queryable)]
-    struct Category {
-        uuid: String,
-        name: String,
-        slug: String,
-        created_at: String,
-        updated_at: String,
-    }
 
     use schema::category::dsl::category as dsl_category;
 
