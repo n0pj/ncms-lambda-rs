@@ -65,9 +65,6 @@ impl Default for NewCategory {
 }
 
 impl NewModel<Category, NewCategory, Error> for NewCategory {
-    ///
-    /// DB へデータを作成する
-    ///
     fn from_model(model: &Category) -> Result<Self, Error> {
         Ok(Self {
             uuid: model.uuid.clone(),
