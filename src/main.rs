@@ -7,6 +7,7 @@ extern crate diesel;
 
 mod errors;
 mod http;
+mod models;
 mod mutation_roots;
 mod query_roots;
 mod schema;
@@ -35,7 +36,7 @@ use serde::Deserialize;
 use serde_json::Value;
 use std::env;
 
-use ncms_core::mysql::establish_connection;
+use ncms_core::db::mysql::establish_connection;
 use ncms_lambda_core::mysql::Migration;
 
 use actix_cors::Cors;
