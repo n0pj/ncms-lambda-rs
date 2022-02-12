@@ -16,6 +16,7 @@ pub struct User {
     pub email: Option<String>,
     pub display_name: Option<String>,
     pub password: Option<String>,
+    pub google_authenticator_secret: Option<String>,
     pub created_at: String,
     pub updated_at: String,
 }
@@ -31,6 +32,7 @@ impl Model<ResUser, Error> for User {
             email: self.email.clone(),
             display_name: self.display_name.clone(),
             password: self.password.clone(),
+            google_authenticator_secret: self.google_authenticator_secret.clone(),
             created_at: self.created_at.clone(),
             updated_at: self.updated_at.clone(),
         })
@@ -48,6 +50,7 @@ pub struct NewUser {
     pub email: Option<String>,
     pub display_name: Option<String>,
     pub password: Option<String>,
+    pub google_authenticator_secret: Option<String>,
     pub created_at: String,
     pub updated_at: String,
 }
@@ -62,6 +65,7 @@ impl Default for NewUser {
             email: None,
             display_name: None,
             password: None,
+            google_authenticator_secret: None,
             created_at: now.clone(),
             updated_at: now,
         }
@@ -76,6 +80,7 @@ impl NewModel<User, NewUser, Error> for NewUser {
             email: None,
             display_name: None,
             password: None,
+            google_authenticator_secret: None,
             created_at: model.created_at.clone(),
             updated_at: model.updated_at.clone(),
         })
@@ -88,6 +93,7 @@ impl NewModel<User, NewUser, Error> for NewUser {
             email: self.email.clone(),
             display_name: self.display_name.clone(),
             password: self.password.clone(),
+            google_authenticator_secret: None,
             created_at: self.created_at.clone(),
             updated_at: self.updated_at.clone(),
         })
@@ -100,6 +106,7 @@ impl NewModel<User, NewUser, Error> for NewUser {
             email: self.email.clone(),
             display_name: self.display_name.clone(),
             password: self.password.clone(),
+            google_authenticator_secret: None,
             created_at: self.created_at.clone(),
             updated_at: self.updated_at.clone(),
         })
@@ -112,6 +119,7 @@ impl NewModel<User, NewUser, Error> for NewUser {
             email: self.email.clone(),
             display_name: self.display_name.clone(),
             password: self.password.clone(),
+            google_authenticator_secret: None,
             created_at: self.created_at.clone(),
             updated_at: self.updated_at.clone(),
         })
@@ -128,6 +136,7 @@ pub struct ResUser {
     pub email: Option<String>,
     pub display_name: Option<String>,
     pub password: Option<String>,
+    pub google_authenticator_secret: Option<String>,
     pub created_at: String,
     pub updated_at: String,
 }

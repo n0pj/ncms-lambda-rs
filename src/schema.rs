@@ -71,6 +71,7 @@ table! {
         email -> Nullable<Varchar>,
         display_name -> Nullable<Varchar>,
         password -> Nullable<Varchar>,
+        google_authenticator_secret -> Nullable<Varchar>,
         created_at -> Varchar,
         updated_at -> Varchar,
     }

@@ -20,4 +20,67 @@ impl QueryRoot {
             name: "category1".to_string(),
         }])
     }
+
+    fn post_categories() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    fn posts() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    fn post() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    fn post_comments() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    fn users() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    fn login() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    fn logout() -> FieldResult<Vec<Human>> {
+        Ok(vec![Human {
+            uuid: "1".to_string(),
+            name: "category1".to_string(),
+        }])
+    }
+
+    // fn create_mfa_secret() -> FieldResult<Vec<Human>> {
+    //     Ok(vec![Human {
+    //         uuid: "1".to_string(),
+    //         name: "category1".to_string(),
+    //     }])
+    // }
+
+    // fn confirm_mfa_secret() -> FieldResult<Vec<Human>> {
+    //     Ok(vec![Human {
+    //         uuid: "1".to_string(),
+    //         name: "category1".to_string(),
+    //     }])
+    // }
 }
