@@ -38,7 +38,7 @@ impl Model<ResPostCategory, Error> for PostCategory {
 ///
 #[derive(Debug, Clone, Insertable)]
 #[table_name = "post_category"]
-struct NewCategory {
+struct NewPostCategory {
     pub uuid: String,
     pub post_uuid: String,
     pub category_uuid: String,
@@ -46,7 +46,7 @@ struct NewCategory {
     pub updated_at: String,
 }
 
-impl Default for NewCategory {
+impl Default for NewPostCategory {
     fn default() -> Self {
         let now = Utc::now().to_string();
 
@@ -60,7 +60,7 @@ impl Default for NewCategory {
     }
 }
 
-impl NewModel<PostCategory, NewCategory, Error> for NewCategory {
+impl NewModel<PostCategory, NewPostCategory, Error> for NewPostCategory {
     fn from_model(model: &PostCategory) -> Result<Self, Error> {
         Ok(Self {
             uuid: model.uuid.clone(),
@@ -114,7 +114,7 @@ struct ResPostCategory {
     pub updated_at: String,
 }
 
-pub type Categories = Vec<PostCategory>;
+pub type PostCategories = Vec<PostCategory>;
 pub type ResCategories = Vec<ResPostCategory>;
 
 pub trait CategoriesMethods {
@@ -124,7 +124,7 @@ pub trait CategoriesMethods {
     fn to_res(&self) -> ResCategories;
 }
 
-impl CategoriesMethods for Categories {
+impl CategoriesMethods for PostCategories {
     fn to_res(&self) -> ResCategories {
         self.iter()
             .map(|post_category| post_category.to_res().unwrap())
