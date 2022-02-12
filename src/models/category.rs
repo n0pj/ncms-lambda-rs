@@ -1,8 +1,10 @@
 use crate::schema::category;
+use chrono::Utc;
 use diesel::{Insertable, Queryable};
 use juniper::GraphQLObject;
-use ncms_core::NewModel;
+use ncms_core::{Model, NewModel};
 use std::io::Error;
+use uuid::Uuid;
 
 ///
 /// DB からデータを取得するための構造体
@@ -17,19 +19,19 @@ pub struct Category {
     pub updated_at: String,
 }
 
-impl Category {
+impl Model<ResCategory, Error> for Category {
     ///
     /// レスポンス用に変換
     ///
-    pub fn to_res(&self) -> Category {
-        Category {
+    fn to_res(&self) -> Result<ResCategory, Error> {
+        Ok(ResCategory {
             uuid: self.uuid.clone(),
             name: self.name.clone(),
             slug: self.slug.clone(),
             is_main: self.is_main.clone(),
             created_at: self.created_at.clone(),
             updated_at: self.updated_at.clone(),
-        }
+        })
     }
 }
 
@@ -49,13 +51,15 @@ struct NewCategory {
 
 impl Default for NewCategory {
     fn default() -> Self {
+        let now = Utc::now().to_string();
+
         Self {
-            uuid: "".to_owned(),
+            uuid: Uuid::new_v4().to_string(),
             name: "".to_owned(),
             slug: "".to_owned(),
             is_main: false,
-            created_at: "".to_owned(),
-            updated_at: "".to_owned(),
+            created_at: now.clone(),
+            updated_at: now,
         }
     }
 }
@@ -85,6 +89,7 @@ impl NewModel<Category, NewCategory, Error> for NewCategory {
             updated_at: self.updated_at.clone(),
         })
     }
+
     fn insert(&self) -> Result<Category, Error> {
         Ok(Category {
             uuid: self.uuid.clone(),
@@ -95,6 +100,7 @@ impl NewModel<Category, NewCategory, Error> for NewCategory {
             updated_at: self.updated_at.clone(),
         })
     }
+
     fn update(&self) -> Result<Category, Error> {
         Ok(Category {
             uuid: self.uuid.clone(),
@@ -113,15 +119,27 @@ impl NewModel<Category, NewCategory, Error> for NewCategory {
 #[derive(Debug, Clone, GraphQLObject)]
 struct ResCategory {
     pub uuid: String,
+    pub name: String,
+    pub slug: String,
+    pub is_main: bool,
+    pub created_at: String,
+    pub updated_at: String,
 }
 
 pub type Categories = Vec<Category>;
-pub type NewCategories = Vec<NewCategory>;
 pub type ResCategories = Vec<ResCategory>;
 
-pub trait NewCategoriesMethods {
+pub trait CategoriesMethods {
     ///
     /// レスポンス用に変換
     ///
-    fn to_res() -> ResCategories;
+    fn to_res(&self) -> ResCategories;
+}
+
+impl CategoriesMethods for Categories {
+    fn to_res(&self) -> ResCategories {
+        self.iter()
+            .map(|category| category.to_res().unwrap())
+            .collect::<ResCategories>()
+    }
 }

@@ -1834,12 +1834,13 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio 1.16.1",
+ "uuid",
 ]
 
 [[package]]
 name = "ncms_core"
 version = "0.1.0"
-source = "git+https://github.com/n0pj/ncms-core-rs?branch=main#17ddb846a8555a2ca774007b930bfa548cb8770d"
+source = "git+https://github.com/n0pj/ncms-core-rs?branch=main#6f6b9d512fef146f5a4fedfdcec20bc649d4305d"
 dependencies = [
  "argon2",
  "diesel",
@@ -3166,6 +3167,10 @@ name = "uuid"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+dependencies = [
+ "getrandom 0.2.4",
+ "serde",
+]
 
 [[package]]
 name = "valuable"
