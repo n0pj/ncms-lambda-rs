@@ -1,5 +1,9 @@
+mod category;
 mod login;
 mod logout;
+mod post;
+mod post_comment;
+mod user;
 
 use juniper::FieldResult;
 // use serde::Serialize;
