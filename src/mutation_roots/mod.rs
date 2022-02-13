@@ -10,7 +10,9 @@ use juniper::FieldResult;
 use crate::models::category::ResCategory;
 use crate::models::post::ResPost;
 use crate::models::post_comment::ResPostComment;
+use crate::models::session::ResSession;
 use crate::models::user::ResUser;
+
 use category::{
     create_category, delete_category, update_category, ArgCreateCategory, ArgDeleteCategory,
     ArgUpdateCategory,
@@ -75,7 +77,11 @@ impl MutationRoot {
         delete_user(arg_user)
     }
 
-    fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResUser> {
+    // fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResUser> {
+    //     verify_login(arg_verify_login)
+    // }
+
+    fn login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResSession> {
         verify_login(arg_verify_login)
     }
 

@@ -1,6 +1,7 @@
 use crate::models::user::{Model, NewModel, NewUser, ResUser, User};
 use diesel::prelude::*;
 use juniper::{FieldResult, GraphQLInputObject};
+use ncms_core::authentications::common::gen_password_hash;
 use ncms_core::db::mysql::establish_connection;
 
 #[derive(Debug, Clone, GraphQLInputObject)]
@@ -31,11 +32,15 @@ pub fn create_user(arg_user: ArgCreateUser) -> FieldResult<ResUser> {
     use crate::schema::user::dsl as dsl_user;
 
     let conn = establish_connection();
+    let password = match arg_user.password {
+        Some(password) => Some(gen_password_hash(&password)?),
+        None => None,
+    };
     let new_user = NewUser {
         name: arg_user.name,
         email: arg_user.email,
         display_name: arg_user.display_name,
-        password: arg_user.password,
+        password,
         google_authenticator_secret: arg_user.google_authenticator_secret,
         ..Default::default()
     };
@@ -50,12 +55,20 @@ pub fn update_user(arg_user: ArgUpdateUser) -> FieldResult<ResUser> {
     use crate::schema::user::dsl as dsl_user;
 
     let conn = establish_connection();
+    let password = match arg_user.password {
+        Some(password) => Some(gen_password_hash(&password)?),
+        // None の場合は更新せず、前のパスワードを使う
+        None => {
+            let user = dsl_user::user.find(&arg_user.uuid).first::<User>(&conn)?;
+            user.password
+        }
+    };
     let new_user = NewUser {
         uuid: arg_user.uuid,
         name: arg_user.name,
         email: arg_user.email,
         display_name: arg_user.display_name,
-        password: arg_user.password,
+        password,
         google_authenticator_secret: arg_user.google_authenticator_secret,
         ..Default::default()
     };

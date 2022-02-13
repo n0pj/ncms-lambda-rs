@@ -1,6 +1,6 @@
 use crate::models::user::User;
 use diesel::prelude::*;
-use ncms_core::{db::mysql::establish_connection, Password};
+use ncms_core::{db::mysql::establish_connection, verify_password};
 use std::io::{Error, ErrorKind};
 
 #[derive(Debug, Clone)]
@@ -46,8 +46,7 @@ impl NewLogin {
         }
 
         // パスワードの検証
-        let result =
-            Password::verify_password(&self.password, user.password.as_ref().unwrap().as_str());
+        let result = verify_password(&self.password, user.password.as_ref().unwrap().as_str());
 
         // verify_password で何らかのエラーがあった場合
         let result = match result {

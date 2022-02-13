@@ -47,6 +47,7 @@ table! {
 table! {
     session (uuid) {
         uuid -> Varchar,
+        token_secret -> Varchar,
         bearer_token -> Varchar,
         expired_at -> Varchar,
         created_at -> Varchar,
