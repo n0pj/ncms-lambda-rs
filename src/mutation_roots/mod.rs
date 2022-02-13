@@ -7,13 +7,30 @@ mod user;
 
 use juniper::FieldResult;
 // use serde::Serialize;
+use crate::models::category::ResCategory;
 use crate::models::user::ResUser;
+use category::{
+    create_category, delete_category, update_category, ArgCreateCategory, ArgDeleteCategory,
+    ArgUpdateCategory,
+};
 use login::{verify_login, ArgVerifyLogin};
 
 pub struct MutationRoot;
 
 #[juniper::graphql_object]
 impl MutationRoot {
+    fn create_category(arg_category: ArgCreateCategory) -> FieldResult<ResCategory> {
+        create_category(arg_category)
+    }
+
+    fn update_category(arg_category: ArgUpdateCategory) -> FieldResult<ResCategory> {
+        update_category(arg_category)
+    }
+
+    fn delete_category(arg_category: ArgDeleteCategory) -> FieldResult<ResCategory> {
+        delete_category(arg_category)
+    }
+
     fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResUser> {
         verify_login(arg_verify_login)
     }
