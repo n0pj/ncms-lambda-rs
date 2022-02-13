@@ -21,6 +21,7 @@ use post_comment::{
     create_post_comment, delete_post_comment, update_post_comment, ArgCreatePostComment,
     ArgDeletePostComment, ArgUpdatePostComment,
 };
+use user::{create_user, delete_user, update_user, ArgCreateUser, ArgDeleteUser, ArgUpdateUser};
 
 pub struct MutationRoot;
 
@@ -60,6 +61,18 @@ impl MutationRoot {
 
     fn delete_post_comment(arg_post_comment: ArgDeletePostComment) -> FieldResult<ResPostComment> {
         delete_post_comment(arg_post_comment)
+    }
+
+    fn create_user(arg_user: ArgCreateUser) -> FieldResult<ResUser> {
+        create_user(arg_user)
+    }
+
+    fn update_user(arg_user: ArgUpdateUser) -> FieldResult<ResUser> {
+        update_user(arg_user)
+    }
+
+    fn delete_user(arg_user: ArgDeleteUser) -> FieldResult<ResUser> {
+        delete_user(arg_user)
     }
 
     fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResUser> {
