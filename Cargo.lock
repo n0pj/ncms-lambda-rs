@@ -1855,12 +1855,13 @@ dependencies = [
 [[package]]
 name = "ncms_core"
 version = "0.1.0"
-source = "git+https://github.com/n0pj/ncms-core-rs?branch=main#11b631a6d08fadd8a0eb1a0113467bfc3581f3f7"
+source = "git+https://github.com/n0pj/ncms-core-rs?branch=main#b22369d62fc3827034c615d057e8341f4d40b111"
 dependencies = [
  "argon2",
  "diesel",
  "dotenv",
  "google-authenticator",
+ "jsonwebtoken",
  "juniper",
  "rand 0.8.4",
  "rand_core 0.6.3",
