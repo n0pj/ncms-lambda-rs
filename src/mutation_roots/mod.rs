@@ -8,12 +8,17 @@ mod user;
 use juniper::FieldResult;
 // use serde::Serialize;
 use crate::models::category::ResCategory;
+use crate::models::post_comment::ResPostComment;
 use crate::models::user::ResUser;
 use category::{
     create_category, delete_category, update_category, ArgCreateCategory, ArgDeleteCategory,
     ArgUpdateCategory,
 };
 use login::{verify_login, ArgVerifyLogin};
+use post_comment::{
+    create_post_comment, delete_post_comment, update_post_comment, ArgCreatePostComment,
+    ArgDeletePostComment, ArgUpdatePostComment,
+};
 
 pub struct MutationRoot;
 
@@ -29,6 +34,18 @@ impl MutationRoot {
 
     fn delete_category(arg_category: ArgDeleteCategory) -> FieldResult<ResCategory> {
         delete_category(arg_category)
+    }
+
+    fn create_post_comment(arg_post_comment: ArgCreatePostComment) -> FieldResult<ResPostComment> {
+        create_post_comment(arg_post_comment)
+    }
+
+    fn update_post_comment(arg_post_comment: ArgUpdatePostComment) -> FieldResult<ResPostComment> {
+        update_post_comment(arg_post_comment)
+    }
+
+    fn delete_post_comment(arg_post_comment: ArgDeletePostComment) -> FieldResult<ResPostComment> {
+        delete_post_comment(arg_post_comment)
     }
 
     fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResUser> {
