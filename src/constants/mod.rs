@@ -1,1 +1,2 @@
-mod status;
+pub mod google_authenticator;
+pub mod status;

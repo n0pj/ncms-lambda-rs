@@ -1,5 +1,6 @@
 pub mod category;
 pub mod login;
+pub mod mfa;
 pub mod post;
 pub mod post_category;
 pub mod post_comment;

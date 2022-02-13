@@ -1,6 +1,7 @@
 mod category;
 mod login;
 mod logout;
+mod mfa;
 mod post;
 mod post_comment;
 mod user;
@@ -8,11 +9,13 @@ mod user;
 use juniper::FieldResult;
 // use serde::Serialize;
 use crate::models::category::ResCategory;
+use crate::models::mfa::ResMfa;
 use crate::models::post::ResPost;
 use crate::models::post_comment::ResPostComment;
 use crate::models::session::ResSession;
 use crate::models::user::ResUser;
 
+use crate::mutation_roots::mfa::{confirm_mfa, create_mfa_secret, ArgConfirmMfa};
 use category::{
     create_category, delete_category, update_category, ArgCreateCategory, ArgDeleteCategory,
     ArgUpdateCategory,
@@ -92,17 +95,13 @@ impl MutationRoot {
     //     }])
     // }
 
-    // fn create_mfa_secret() -> FieldResult<Vec<Human>> {
-    //     Ok(vec![Human {
-    //         uuid: "1".to_string(),
-    //         name: "category1".to_string(),
-    //     }])
-    // }
+    /// MFA 作成を行う。
+    fn create_mfa_secret(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResMfa> {
+        create_mfa_secret(arg_verify_login)
+    }
 
-    // fn confirm_mfa_secret() -> FieldResult<Vec<Human>> {
-    //     Ok(vec![Human {
-    //         uuid: "1".to_string(),
-    //         name: "category1".to_string(),
-    //     }])
-    // }
+    /// 2 要素認証確認用
+    fn confirm_mfa(arg_mfa: ArgConfirmMfa) -> FieldResult<ResSession> {
+        confirm_mfa(arg_mfa)
+    }
 }

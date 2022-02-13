@@ -141,6 +141,21 @@ pub struct ResUser {
     pub updated_at: String,
 }
 
+impl Default for ResUser {
+    fn default() -> Self {
+        Self {
+            uuid: "".to_string(),
+            name: None,
+            email: None,
+            display_name: None,
+            password: None,
+            google_authenticator_secret: None,
+            created_at: "".to_string(),
+            updated_at: "".to_string(),
+        }
+    }
+}
+
 pub type Users = Vec<User>;
 pub type ResUsers = Vec<ResUser>;
 
