@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` VARCHAR(100) NULL,
   `display_name` VARCHAR(45) NULL,
   `password` VARCHAR(255) NULL,
-  `google_authenticator_secret` VARCHAR(255) NULL,
+  `google_authenticator_secret` VARCHAR(32) NULL,
   `created_at` VARCHAR(45) NOT NULL,
   `updated_at` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`uuid`),

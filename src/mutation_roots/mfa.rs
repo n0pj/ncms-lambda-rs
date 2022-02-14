@@ -38,7 +38,7 @@ pub fn create_mfa_secret(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResMfa
     }
 
     let auth = GoogleAuthenticator::new();
-    let secret = auth.create_secret(255);
+    let secret = auth.create_secret(32);
     let qr_code_url = auth.qr_code_url(
         &secret,
         &format!("{}", &user.email.unwrap()),
