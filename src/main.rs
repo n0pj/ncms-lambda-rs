@@ -15,7 +15,6 @@ mod schema;
 mod seeders;
 mod subscription_roots;
 
-// use juniper::http::graphiql::graphiql_source;
 // use aws_config::meta::region::RegionProviderChain;
 // use crate::models::category::Category;
 use chrono::Utc;
@@ -23,10 +22,12 @@ use chrono::Utc;
 use dotenv::dotenv;
 use http::response::NcmsValueErrors;
 use juniper::execute_sync;
-use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 use juniper::{execute, EmptySubscription, RootNode, Variables};
-use ncms_core::errors::http::{ValueError, ValueErrors};
+use ncms_core::{
+    errors::http::{ValueError, ValueErrors},
+    http::graphql::client::graphiql_source,
+};
 use seeders::*;
 
 use lambda_runtime::{handler_fn, Context};
@@ -38,7 +39,6 @@ use serde::Deserialize;
 use serde_json::Value;
 use std::env;
 
-// use ncms_core::db::mysql::establish_connection;
 use ncms_lambda_core::mysql::Migration;
 
 use actix_cors::Cors;
@@ -248,7 +248,7 @@ async fn graphql(
 
 /// GraphQL クライアント
 fn graphiql() -> HttpResponse {
-    let html = graphiql_source("/", None);
+    let html = graphiql_source("/");
 
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
