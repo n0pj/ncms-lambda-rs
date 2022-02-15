@@ -28,7 +28,11 @@ use post_comment::{
 };
 use user::{create_user, delete_user, update_user, ArgCreateUser, ArgDeleteUser, ArgUpdateUser};
 
-pub struct MutationRoot;
+use ncms_core::Header;
+
+pub struct MutationRoot {
+    pub header: Header,
+}
 
 #[juniper::graphql_object]
 impl MutationRoot {

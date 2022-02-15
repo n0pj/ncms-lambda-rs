@@ -12,7 +12,11 @@ use category::{categories, ArgCategory};
 use post::{post, posts, ArgPost};
 use post_comment::{post_comments, ArgPostComment};
 
-pub struct QueryRoot;
+use ncms_core::Header;
+
+pub struct QueryRoot {
+    pub header: Header,
+}
 
 /// GET 系
 #[juniper::graphql_object]

@@ -25,9 +25,12 @@ use juniper::execute_sync;
 use juniper::http::GraphQLRequest;
 use juniper::{execute, EmptySubscription, RootNode, Variables};
 use ncms_core::{
+    db::mysql::establish_connection,
     errors::http::{ValueError, ValueErrors},
     http::graphql::client::graphiql_source,
+    Header,
 };
+use ncms_lambda_core::http::request::{find_param, format_query, get_query};
 use seeders::*;
 
 use lambda_runtime::{handler_fn, Context};
@@ -42,71 +45,44 @@ use std::env;
 use ncms_lambda_core::mysql::Migration;
 
 use actix_cors::Cors;
-use actix_web::{web, App, HttpResponse, HttpServer};
+use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 
 type Error = Box<dyn std::error::Error + Sync + Send + 'static>;
 type Schema = RootNode<'static, QueryRoot, MutationRoot, EmptySubscription>;
 
-/// Lambda に GET パラメーターを渡した場合 queryStringParameters に入る。
-/// そこから GET パラメーターを取得する
-fn get_query(event: Value) -> Result<Value, Value> {
-    // println!("{:?}", event);
-
-    // Lambda では queryStringParameters の中に GET パラメーターが入る
-    let query_string_parameters = match event.get("queryStringParameters") {
-        Some(event) => event.clone(),
-        None => {
-            let field_errors = NcmsValueErrors::new(
-                errors::validation::CANNOT_FIND_QUERY_STRING_PARAMETERS.message,
-            );
-            return Err(serde_json::to_value(field_errors).expect("fatal error"));
-        }
-    };
-
-    // query に GraphQL query を入れるため、ここから取得
-    match query_string_parameters.get("query") {
-        Some(query) => Ok(query.clone()),
-        None => {
-            let field_errors = NcmsValueErrors::new(errors::validation::CANNOT_FIND_QUERY.message);
-            return Err(serde_json::to_value(field_errors).expect("fatal error"));
-        }
-    }
-}
-
-/// GET で送られてきたものは "" で囲まれてしまうため、 "" を解除する
-/// "query { humans(i: 0) { name } }" -> query { humans(i: 0) { name } }
-fn format_query(query: Value) -> Result<String, Value> {
-    let query = match serde_json::to_string(&query) {
-        Ok(result) => result,
-        Err(_) => return Err(NcmsValueErrors::new("fatal error").to_value()),
-    };
-    // let query = query.to_string();
-    let re = Regex::new(r#""(.*)""#).unwrap();
-    let caps = re.captures(&query).unwrap();
-    let query = caps.get(1).map_or("", |m| m.as_str());
-
-    Ok(query.to_owned())
-}
-
 /// GraphQL 実行
-async fn execute_query(query: Value) -> Result<Value, Value> {
-    let query = format_query(query)?;
-
-    let schema = Schema::new(QueryRoot, MutationRoot, EmptySubscription::new());
-    // println!("query1: {}", query2);
-    // let query2 = "query { humans(i: 0) { name } }";
-    // println!("query2: {}", query2);
-
+async fn execute_query(header: Header, query: Value) -> Result<Value, Value> {
+    let query = match format_query(&query) {
+        Ok(query) => query,
+        Err(e) => {
+            return Ok(ValueErrors::new(vec![ValueError {
+                message: e.to_string(),
+                ..Default::default()
+            }])
+            .to_value())
+        }
+    };
+    let schema = Schema::new(
+        QueryRoot {
+            header: header.clone(),
+        },
+        MutationRoot { header },
+        EmptySubscription::new(),
+    );
     let result = execute(&query, None, &schema, &Variables::default(), &()).await;
-
-    // println!("{:?}", result);
-
     let result = match result {
         Ok((result, _)) => serde_json::to_value(result).expect("fatal error"),
         Err(err) => {
             println!("{}", err);
+
             let msg = err.to_string();
-            NcmsValueErrors::new(&msg).to_value()
+            let field_error = ValueError {
+                property: Some(msg),
+                ..Default::default()
+            };
+            let field_errors = ValueErrors::new(vec![field_error]);
+
+            field_errors.to_value()
         }
     };
 
@@ -114,61 +90,79 @@ async fn execute_query(query: Value) -> Result<Value, Value> {
 }
 
 async fn local_handler(event: Value) -> Result<Value, Value> {
-    // let query = get_query(event)?;
-    // let query = serde_json::to_string(&query).unwrap();
-    // match get_query(event) {
-    //     Ok(query) => Ok(query),
-    //     Err(err) => Ok(err),
-    // }
-    let query = get_query(event)?;
-    let result = execute_query(query).await?;
-
-    // let conn = establish_connection();
+    let query = match get_query(&event) {
+        Ok(query) => query,
+        Err(e) => {
+            return Ok(ValueErrors::new(vec![ValueError {
+                message: e.to_string(),
+                ..Default::default()
+            }])
+            .to_value())
+        }
+    };
+    let headers = find_param(&event, "headers");
+    let headers = match headers {
+        Ok(headers) => headers,
+        Err(e) => {
+            return Ok(ValueErrors::new(vec![ValueError {
+                message: e.to_string(),
+                ..Default::default()
+            }])
+            .to_value())
+        }
+    };
+    let authorization = match headers.get("authorization") {
+        Some(authorization) => Some(authorization.to_string()),
+        None => None,
+    };
+    let header = Header { authorization };
+    let result = execute_query(header, query).await?;
+    let _conn = establish_connection();
 
     println!("database connected");
-
-    // use schema::category::dsl::category as dsl_category;
-
-    // let category = dsl_category.limit(5).load::<Category>(&conn).expect("err");
-    // println!(
-    //     "{} {} {} {} {}",
-    //     category[0].uuid,
-    //     category[0].name,
-    //     category[0].slug,
-    //     category[0].created_at,
-    //     category[0].updated_at
-    // );
 
     Ok(result)
 }
 
 async fn handler(event: Value, _: Context) -> Result<Value, Error> {
-    println!("{:?}", event);
-    let query = match get_query(event) {
+    let query = match get_query(&event) {
         Ok(result) => result,
-        Err(result) => return Ok(result),
+        Err(e) => {
+            return Ok(ValueErrors::new(vec![ValueError {
+                message: e.to_string(),
+                ..Default::default()
+            }])
+            .to_value())
+        }
     };
-    let result = execute_query(query).await;
-    // let conn = establish_connection();
+    let headers = find_param(&event, "headers");
+    let headers = match headers {
+        Ok(headers) => headers,
+        Err(e) => {
+            return Ok(ValueErrors::new(vec![ValueError {
+                message: e.to_string(),
+                ..Default::default()
+            }])
+            .to_value())
+        }
+    };
+    let authorization = match headers.get("authorization") {
+        Some(authorization) => Some(authorization.to_string()),
+        None => None,
+    };
+    let header = Header { authorization };
+    let result = execute_query(header, query).await;
+    let _conn = establish_connection();
 
-    // println!("database connected");
+    println!("database connected");
 
-    // use schema::category::dsl::category as dsl_category;
-
-    // let category = dsl_category.limit(5).load::<Category>(&conn).expect("err");
-    // println!(
-    //     "{} {} {} {} {}",
-    //     category[0].uuid,
-    //     category[0].name,
-    //     category[0].slug,
-    //     category[0].created_at,
-    //     category[0].updated_at
-    // );
-
-    // Ok(result.unwrap())
     match result {
         Ok(value) => Ok(value),
-        Err(_) => panic!(),
+        Err(_) => Ok(ValueErrors::new(vec![ValueError {
+            message: "fatal error".to_string(),
+            ..Default::default()
+        }])
+        .to_value()),
     }
 }
 
@@ -182,23 +176,37 @@ async fn graphql(
     graphql_request: Option<web::Json<GraphQLRequest>>,
     // query: Option<web::Query<Info>>,
     form_data: Option<web::Form<Formdata>>,
-    // req: HttpRequest,
+    request: HttpRequest,
     // ) -> Result<HttpResponse, actix_web::Error> {
 ) -> Result<HttpResponse, actix_web::Error> {
-    // let req = req.head();
-    // let headers = req.headers();
+    let request_head = request.head();
+    let headers = request_head.headers();
 
     println!("----------");
     // println!("graphql_object: {:?}", graphql_request);
     // println!("query    : {:?}", query);
     // println!("form_data: {:?}", form_data);
     // println!("headers  : {:?}", headers);
+    let authorization = headers.get("Authorization");
+    let authorization = match authorization {
+        Some(authorization) => Some(authorization.to_str().unwrap().to_owned()),
+        None => None,
+    };
+    let header = Header { authorization };
 
     // GraphQLRequest の場合は graphiql のアクセスなのでこちらを使用する
     if let Some(data) = graphql_request {
         println!("graphiql requested");
         let result = web::block(move || {
-            let schema = Schema::new(QueryRoot, MutationRoot, EmptySubscription::new());
+            let schema = Schema::new(
+                QueryRoot {
+                    header: header.clone(),
+                },
+                MutationRoot {
+                    header: header.clone(),
+                },
+                EmptySubscription::new(),
+            );
             let result = data.execute_sync(&schema, &());
             Ok::<_, serde_json::error::Error>(serde_json::to_string(&result)?)
         })
@@ -214,7 +222,15 @@ async fn graphql(
     let result = match form_data {
         Some(form_data) => {
             println!("POST requested");
-            let schema = Schema::new(QueryRoot, MutationRoot, EmptySubscription::new());
+            let schema = Schema::new(
+                QueryRoot {
+                    header: header.clone(),
+                },
+                MutationRoot {
+                    header: header.clone(),
+                },
+                EmptySubscription::new(),
+            );
             let result = execute_sync(&form_data.query, None, &schema, &Variables::default(), &());
 
             let result = match result {
