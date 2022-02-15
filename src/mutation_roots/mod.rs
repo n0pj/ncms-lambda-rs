@@ -15,7 +15,7 @@ use crate::models::post_comment::ResPostComment;
 use crate::models::session::ResSession;
 use crate::models::user::ResUser;
 
-use crate::mutation_roots::mfa::{confirm_mfa, create_mfa_secret, ArgConfirmMfa};
+use crate::mutation_roots::mfa::{create_mfa_secret, verify_mfa, ArgVerifyMfa};
 use category::{
     create_category, delete_category, update_category, ArgCreateCategory, ArgDeleteCategory,
     ArgUpdateCategory,
@@ -105,7 +105,8 @@ impl MutationRoot {
     }
 
     /// 2 要素認証確認用
-    fn confirm_mfa(arg_mfa: ArgConfirmMfa) -> FieldResult<ResSession> {
-        confirm_mfa(arg_mfa)
+    /// 2 要素認証確認用
+    fn verify_mfa(arg_mfa: ArgVerifyMfa) -> FieldResult<ResSession> {
+        verify_mfa(arg_mfa)
     }
 }

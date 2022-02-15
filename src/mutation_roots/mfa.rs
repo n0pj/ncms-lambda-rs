@@ -4,9 +4,11 @@ use crate::models::mfa::ResMfa;
 use crate::models::session::{NewSession, ResSession};
 use crate::models::user::{Model, NewModel, NewUser};
 use crate::mutation_roots::login::ArgVerifyLogin;
+use chrono::Utc;
 use juniper::{FieldError, FieldResult};
-use ncms_core::{ErrorCorrectionLevel, GoogleAuthenticator};
+use ncms_core::{gen_jwt_token, Claims, ErrorCorrectionLevel, GoogleAuthenticator};
 use serde::Serialize;
+use std::env;
 
 // #[derive(Debug, Clone, GraphQLInputObject, Serialize)]
 // pub struct ArgCreateMfaSecret {
@@ -15,8 +17,9 @@ use serde::Serialize;
 // }
 
 #[derive(Debug, Clone, GraphQLInputObject, Serialize)]
-pub struct ArgConfirmMfa {
-    password: String,
+pub struct ArgVerifyMfa {
+    arg_verify_login: ArgVerifyLogin,
+    code: String,
 }
 
 /// ログインの検証をしたあとに、MFA を発行する
@@ -60,10 +63,54 @@ pub fn create_mfa_secret(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResMfa
     Ok(new_mfa)
 }
 
-pub fn confirm_mfa(arg_mfa: ArgConfirmMfa) -> FieldResult<ResSession> {
-    let new_session = NewSession {
+pub fn verify_mfa(arg_mfa: ArgVerifyMfa) -> FieldResult<ResSession> {
+    let new_login = NewLogin::new(
+        &arg_mfa.arg_verify_login.email,
+        &arg_mfa.arg_verify_login.password,
+    );
+    let user = new_login.verify_login()?;
+    let auth = GoogleAuthenticator::new();
+    let secret = user.google_authenticator_secret.clone().unwrap();
+
+    // MFA を検証
+    // code は Google Authenticator で生成された 6 桁の数字
+    let input_code = arg_mfa.code.clone();
+    // let code = auth.get_code(&secret, 0)?;
+    let is_valid = auth.verify_code(&secret, &input_code, 1, 0);
+
+    // MFA が有効でない場合はエラー
+    if !is_valid {
+        return Err(FieldError::from("invalid mfa code"));
+    }
+
+    // ベアラートークンを発行する
+    let now = Utc::now();
+    let expired_at = now.clone() + chrono::Duration::days(30);
+    let mut new_session = NewSession {
+        user_uuid: user.uuid.clone(),
+        expired_at: expired_at.to_string(),
         ..Default::default()
     };
+    let exp = (now.clone() + chrono::Duration::days(30)).timestamp();
+    let iat = now.timestamp();
+    let claims = Claims {
+        user_uuid: user.uuid.clone(),
+        iat,
+        exp,
+    };
+
+    // .env の JWT_SECRET を取得
+    let jwt_secret = match env::var("JWT_SECRET") {
+        Ok(jwt_secret) => jwt_secret,
+        Err(e) => {
+            return Err(FieldError::from(format!(
+                "failed to get JWT_SECRET: {}",
+                e.to_string()
+            )))
+        }
+    };
+
+    new_session.bearer_token = gen_jwt_token(&claims, &jwt_secret, None, None);
 
     Ok(new_session.insert().unwrap().to_res().unwrap())
 }

@@ -6,7 +6,7 @@ use juniper::FieldResult;
 use ncms_core::gen_jwt_token;
 use serde::Serialize;
 
-#[derive(Debug, Clone, GraphQLInputObject)]
+#[derive(Debug, Clone, GraphQLInputObject, Serialize)]
 pub struct ArgVerifyLogin {
     pub email: String,
     pub password: String,
@@ -37,7 +37,9 @@ pub fn verify_login(arg_verify_login: ArgVerifyLogin) -> FieldResult<ResSession>
         exp,
     };
 
-    new_session.bearer_token = gen_jwt_token(&claims, &new_session.token_secret, None, None);
+    let jwt_secret = std::env::var("JWT_SECRET").unwrap();
+
+    new_session.bearer_token = gen_jwt_token(&claims, &jwt_secret, None, None);
 
     let session = new_session.insert()?;
 

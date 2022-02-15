@@ -14,7 +14,6 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Queryable)]
 pub struct Session {
     pub uuid: String,
-    pub token_secret: String,
     pub bearer_token: String,
     pub expired_at: String,
     pub created_at: String,
@@ -29,7 +28,6 @@ impl Model<ResSession, Error> for Session {
     fn to_res(&self) -> Result<ResSession, Error> {
         Ok(ResSession {
             uuid: self.uuid.clone(),
-            // token_secret: self.token_secret.clone(),
             bearer_token: self.bearer_token.clone(),
             expired_at: self.expired_at.clone(),
             created_at: self.created_at.clone(),
@@ -46,7 +44,6 @@ impl Model<ResSession, Error> for Session {
 #[table_name = "session"]
 pub struct NewSession {
     pub uuid: String,
-    pub token_secret: String,
     pub bearer_token: String,
     pub expired_at: String,
     pub created_at: String,
@@ -63,7 +60,6 @@ impl Default for NewSession {
         Self {
             uuid: Uuid::new_v4().to_string(),
             user_uuid: "".to_owned(),
-            token_secret: gen_secret(255),
             bearer_token: "".to_owned(),
             expired_at,
             created_at: now.clone(),
@@ -76,7 +72,6 @@ impl NewModel<Session, NewSession, Error> for NewSession {
     fn from_model(model: &Session) -> Result<Self, Error> {
         Ok(Self {
             uuid: model.uuid.clone(),
-            token_secret: model.token_secret.clone(),
             bearer_token: model.bearer_token.clone(),
             expired_at: model.expired_at.clone(),
             created_at: model.created_at.clone(),
@@ -88,7 +83,6 @@ impl NewModel<Session, NewSession, Error> for NewSession {
     fn to_model(&self) -> Result<Session, Error> {
         Ok(Session {
             uuid: self.uuid.clone(),
-            token_secret: self.token_secret.clone(),
             bearer_token: self.bearer_token.clone(),
             expired_at: self.expired_at.clone(),
             created_at: self.created_at.clone(),
@@ -114,7 +108,6 @@ impl NewModel<Session, NewSession, Error> for NewSession {
     fn update(&self) -> Result<Session, Error> {
         Ok(Session {
             uuid: self.uuid.clone(),
-            token_secret: self.token_secret.clone(),
             bearer_token: self.bearer_token.clone(),
             expired_at: self.expired_at.clone(),
             created_at: self.created_at.clone(),
@@ -130,7 +123,6 @@ impl NewModel<Session, NewSession, Error> for NewSession {
 #[derive(Debug, Clone, GraphQLObject)]
 pub struct ResSession {
     pub uuid: String,
-    // pub token_secret: String,
     pub bearer_token: String,
     pub expired_at: String,
     pub created_at: String,

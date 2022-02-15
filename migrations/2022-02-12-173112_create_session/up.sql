@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS `session` (
   `uuid` VARCHAR(36) NOT NULL,
-  `token_secret` VARCHAR(255) NOT NULL,
   `bearer_token` VARCHAR(255) NOT NULL,
   `expired_at` VARCHAR(45) NOT NULL,
   `created_at` VARCHAR(45) NOT NULL,
