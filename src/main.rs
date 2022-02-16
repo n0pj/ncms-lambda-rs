@@ -14,6 +14,7 @@ mod query_roots;
 mod schema;
 mod seeders;
 mod subscription_roots;
+mod utils;
 
 // use aws_config::meta::region::RegionProviderChain;
 // use crate::models::category::Category;
